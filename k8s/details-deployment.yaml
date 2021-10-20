@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookinfo-dev-details
+  namespace: student21-bookinfo-dev
+  labels:
+    app: bookinfo-dev-details
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookinfo-dev-details
+  template:
+    metadata:
+      labels:
+        app: bookinfo-dev-details
+    spec:
+      containers:
+        - name: bookinfo-dev-details
+          image: ghcr.io/mrsmithz/itkmitl-bookinfo-details:dev
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+              name: web-port
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+              scheme: HTTP
+      imagePullSecrets:
+        - name: registry-bookinfo
